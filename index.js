@@ -1,5 +1,34 @@
-//importa caixa de seleção dos prompts
-const { select } = require('@inquirer/prompts')
+//importa caixa de seleção e inputs dos prompts
+const { select, input } = require('@inquirer/prompts')
+
+let meta = {
+  value: "teste",
+  checked: false
+}
+
+let metas = [ meta ]
+
+const cadastrarMeta = async () => {
+  const meta = await input({ message: "Digite sua meta:" })
+  if (meta.length == 0) {
+    console.log("A meta não pode estar vazia.")
+    return;
+  }
+  metas.push({
+    value: meta,
+    checked: false
+  })
+}
+
+// const listarMetas = () => {
+//   if (metas.length == 0) {
+//     console.log("não há nenhuma meta.");
+//   }
+
+//   for (let pos in metas) {
+//     console.log(metas)
+//   }
+// }
 
 //arrow function
 const start = async () => {
@@ -23,13 +52,15 @@ const start = async () => {
         }
       ]
     })
-    
+
     switch (opcao) {
       case "cadastrar":
-        console.log("cadastrado");
+        await cadastrarMeta()
+        // console.log("cadastrado");
         break
       case "listar":
-        console.log("listados");
+        listarMetas()
+        // console.log(metas);
         break
       case "sair":
         return
