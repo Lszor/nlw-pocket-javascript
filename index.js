@@ -1,13 +1,23 @@
 //importa caixa de seleção e inputs dos prompts
 const { select, input, checkbox } = require('@inquirer/prompts')
+const fs = require("fs").promises
 
 let mensagem = "Bem vindo ao App de Metas!! "
-let meta = {
-  value: "teste",
-  checked: false
+
+let metas
+
+const carregarMetas = async () => {
+  try {
+    const dados = await fs.readFile("metas.json", "utf-8")
+    metas = JSON.parse(dados)
+  } catch (e) {
+    metas = []
+  }
 }
 
-let metas = [meta]
+const salvarMetas = async () => {
+  await fs.writeFile("metas.json", JSON.stringify(metas, null, 2))
+}
 
 const cadastrarMeta = async () => {
   const meta = await input({ message: "Digite sua meta:" })
@@ -121,8 +131,9 @@ const mostrarMensagem = () => {
 }
 //arrow function
 const start = async () => {
-  
+  await carregarMetas()
   while (true) {
+    await salvarMetas()
     mostrarMensagem()
     const opcao = await select({
       message: "Menu >",
@@ -174,7 +185,7 @@ const start = async () => {
         break
       case "sair":
         console.log("Até a próxima!!");
-        
+
         return
     }
   }
